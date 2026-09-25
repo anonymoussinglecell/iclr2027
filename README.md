@@ -15,7 +15,7 @@ Splits, embeddings and models also keep short names in files and folders:
 | Code | Paper |
 |---|---|
 | `random` | Random split |
-| `pairzs_withoutleak` (Tahoe), `pairzs_withleak` (Zenodo) | Pair zero shot |
+| `pairzs_withoutleak` (shared-label setting), `pairzs_withleak` (single-cell label setting) | Pair zero shot |
 | `loclo_loo` | Cell line zero shot |
 | `lodo_loo` | Drug zero shot |
 | `gene_jepa`, `gformer_cancer`, `scgpt_pan`, `pca`, `scvi` | GeneJepa, Geneformer, scGPT, PCA, scVI |
@@ -23,8 +23,8 @@ Splits, embeddings and models also keep short names in files and folders:
 | `mlp`, `lightgbm`, `xrfm` | MLP, LightGBM, xRFM |
 
 Two settings differ between the datasets, as described in the paper:
-- **Pair zero shot.** Tahoe uses the leakage-free split. Zenodo uses the split that allows single-cell leakage, which is negligible in this dataset.
-- **Scoring view.** Tahoe is scored per cell line–drug pair (`pairlevel`). Zenodo has only 17 such pairs, so it is scored per cell (`aggregate`).
+- **Pair zero shot.** Shared-label setting uses the leakage-free split. Single-cell label setting uses the split that allows single-cell leakage, which is negligible in this dataset.
+- **Scoring view.** Shared-label setting is scored per cell line–drug pair (`pairlevel`). Single-cell label setting has only 17 such pairs, so it is scored per cell (`aggregate`).
 
 ## Repository contents
 
@@ -38,17 +38,17 @@ ablation_analyses/       scores behind the ablation figure, one pair of files pe
     {tahoe,zenodo}_baselines_pairlevel_long.csv   prevalence baselines
 ```
 
-The Zenodo baselines file keeps the `_pairlevel` name, but like all Zenodo scores its values are computed per cell.
+The single-cell label settings' baselines file keeps the `_pairlevel` name, but like all scores of this dataset setting its values are computed per cell.
 
 ## Data
 
-The larger files are in the Zenodo record [10.5281/zenodo.22945646](https://doi.org/10.5281/zenodo.22945646).
+The larger files are in the Zenodo record 10.5281/zenodo.22962632.
 
 **`data_input/`**: inputs to `main.py`
-- `tahoe_train_pairs_bal15.parquet`: Tahoe labels, one row per cell and drug. It keeps the 10 of 23 drugs to which 15–85% of cell lines are sensitive.
-- `tahoe_controls2000_merged_hvg5000_log1p_umap.h5ad`: Tahoe expression, 5,000 highly variable genes, with raw-count and log1p layers.
-- `zenodo_rows.parquet`: Zenodo labels.
-- `zenodo_cells_log1p.h5ad`: Zenodo expression, log1p(CPM).
+- `tahoe_train_pairs_bal15.parquet`: Tahoe shared-label setting labels, one row per cell and drug. 
+- `tahoe_controls2000_merged_hvg5000_log1p_umap.h5ad`: Tahoe shared-label setting expression, 5,000 highly variable genes, with raw-count and log1p layers.
+- `zenodo_rows.parquet`: Multiple single-cell label settings' labels.
+- `zenodo_cells_log1p.h5ad`: Multiple single-cell label settings' expression, log1p(CPM).
 - Frozen cell embeddings (GeneJepa, Geneformer, scGPT) and all six drug embeddings for both datasets, as parquet files. PCA and scVI have no file, because `main.py` refits them on each fold's training cells.
 
 **`results/`**: metrics for every configuration, one folder per run named `<split>__<cell_emb>__<drug_emb>__<model>`
@@ -101,9 +101,9 @@ python main.py --project-root . \
 
 These settings differ from `main.py`'s defaults:
 
-| When | Tahoe | Zenodo |
+| When | Shared-label setting | Single-cell label setting |
 |---|---|---|
-| `--cell-emb scvi` | `--scvi-batch-size 512` | `--scvi-batch-size 512 --counts-layer log1p --scvi-input lognorm` (Zenodo has no raw counts) |
+| `--cell-emb scvi` | `--scvi-batch-size 512` | `--scvi-batch-size 512 --counts-layer log1p --scvi-input lognorm` (Single-cell label setting datasets have no raw counts) |
 | `--model xrfm` | `--xrfm-iters 2 --xrfm-max-leaf-size 5000` | defaults (5 iterations, leaf size 20,000) |
 
 All other settings are `main.py`'s defaults, including the number of folds per split (listed in the header of `main.py`).
