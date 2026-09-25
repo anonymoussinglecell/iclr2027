@@ -42,7 +42,7 @@ The single-cell label settings' baselines file keeps the `_pairlevel` name, but 
 
 ## Data
 
-The larger files are in the Zenodo record doi.org/10.5281/zenodo.22962632.
+The larger files are in the Zenodo record [doi.org/10.5281/zenodo.22962632](https://zenodo.org/records/22962632).
 
 **`data_input/`**: inputs to `main.py`
 - `tahoe_train_pairs_bal15.parquet`: Tahoe shared-label setting labels, one row per cell and drug. 
