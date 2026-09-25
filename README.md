@@ -5,6 +5,8 @@ The paper uses two datasets. In the code they are named after where they come fr
 * "Tahoe" : Tahoe 100M dataset (shared-label setting)
 * "Zenodo" : Zenodo record (single-cell label setting). The single-cell label dataset is called zenodo only because it is distributed through a Zenodo record.
 
+## Repository layout
+```
 main.py                 training, inference and scoring for one configuration
 regen_figures/
     common.py           paths, display names, dataset settings, scoring helpers
@@ -12,6 +14,14 @@ regen_figures/
 ablation_analyses/      ablation and prevalence-baseline scores, one pair of files per dataset
     {tahoe,zenodo}_ablation_scores_long.csv
     {tahoe,zenodo}_baselines_pairlevel_long.csv
+```
+## Requirements
+ 
+```
+numpy pandas scikit-learn matplotlib pyarrow anndata torch lightgbm xrfm
+scvi-tools scanpy scikit-misc   # only for --cell-emb pca / scvi
+umap-learn                      # only for the UMAP figure
+```
 
 **Data**
 
